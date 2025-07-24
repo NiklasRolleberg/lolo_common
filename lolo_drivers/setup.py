@@ -26,6 +26,7 @@ setup(
             'menu_input = lolo_drivers.menu_input:main',
             'menu_output = lolo_drivers.menu_output:main',
             'usbl_interface = lolo_drivers.usbl_interface:main',
+            'geofence_checker_client = lolo_drivers.geofence_checker_client:main',
         ],
     },
 )
