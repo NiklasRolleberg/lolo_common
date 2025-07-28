@@ -427,6 +427,38 @@ class Ins2Odom(Node):
         odom.twist.twist.linear = self.current_ins.speed_vessel_frame
         odom.twist.twist.angular = self.current_imu.angular_velocity
 
+        #Covariances
+
+        #Position
+        # xx  xy  xz  0   0   0
+        # yx  yy  yz  0   0   0
+        # zx  zy  zz  0   0   0
+        # 0   0   0   rr  rp  ry
+        # 0   0   0   pr  pp  py
+        # 0   0   0   yr  yp  yy
+
+        #Position
+        odom.pose.covariance[0] = self.current_ins.position_covariance[0] #xx
+        odom.pose.covariance[1] = self.current_ins.position_covariance[1] #xy
+        odom.pose.covariance[2] = self.current_ins.position_covariance[2] #xz
+        odom.pose.covariance[6+0] = self.current_ins.position_covariance[3+0] #yz
+        odom.pose.covariance[6+1] = self.current_ins.position_covariance[3+1] #yy
+        odom.pose.covariance[6+2] = self.current_ins.position_covariance[3+2] #yz
+        odom.pose.covariance[12+0] = self.current_ins.position_covariance[6+0] #zx
+        odom.pose.covariance[12+1] = self.current_ins.position_covariance[6+1] #zy
+        odom.pose.covariance[12+2] = self.current_ins.position_covariance[6+2] #
+
+        #Attitude
+        odom.pose.covariance[21 + 0] = self.current_ins.attitude_covariance[0] #rr
+        odom.pose.covariance[27 + 1] = self.current_ins.attitude_covariance[3+1] #pp
+        odom.pose.covariance[33 + 1] = self.current_ins.attitude_covariance[6+2] #yy
+
+        # Speed
+        odom.pose.covariance[0] = self.current_ins.attitude_covariance[0] #xx
+        odom.pose.covariance[6+1] = self.current_ins.attitude_covariance[3+1] #yy
+        odom.pose.covariance[12+2] = self.current_ins.attitude_covariance[6+2] #zz
+
+
         # Publish messages.
 
         self.lat_lon_pub.publish(geopoint)
