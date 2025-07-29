@@ -64,7 +64,7 @@ class GeoFenceCheckerClient(Node):
         if(self.future.done()):
             result = self.future.result()
             self.get_logger().info('Result: ' + str(result.valid))
-            if(result.valid):
+            if(not result.valid):
                 msg = Empty()
                 self.publisher.publish(msg)
             self.future = None
