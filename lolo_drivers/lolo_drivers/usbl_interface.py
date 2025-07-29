@@ -87,7 +87,7 @@ class UsblInterface:
 
        # Subscribe from the get-go.
         self.node.create_subscription(Char, LoloTopics.USBL_RECEIVED_CHR_TOPIC,
-                                    self.usbl_callback, 10)
+                                    self.usbl_callback, 1000)
         self.node.create_subscription(GeoPoint, SmarcTopics.POS_LATLON_TOPIC,
                                     self.position_callback, 10)
         self.node.create_subscription(Float32, SmarcTopics.DEPTH_TOPIC,
@@ -290,23 +290,24 @@ class UsblInterface:
 
         msg:
             type: string
-            format: "REL East North Up stamp"
+            format: "REL East North Up"
         """
         # Split string by the whitespace between each variable.
         try:
-            cmd, east, north, up, stamp = [m for m in msg.split(" ")]
+            cmd, east, north, up = [m for m in msg.split(" ")]
         except:
             self.log.error("(UsblInterface) Too many values to unpack, message is wrong.")
             self.command = ""
             return
 
-        stamp_msg = Time()
-        stamp = float(stamp)
-        stamp_msg.sec = int(stamp)
-        stamp_msg.nanosec = int((stamp % 1) * 1e9)
+        # TODO: we would like to eventually send a timestamp from the topside.
+        # stamp_msg = Time()
+        # stamp = float(stamp)
+        # stamp_msg.sec = int(stamp)
+        # stamp_msg.nanosec = int((stamp % 1) * 1e9)
         pos_msg = PoseStamped()
         # TODO: will the fact that the stamp is in the past affect ros in a way?
-        pos_msg.header.stamp = stamp_msg
+        pos_msg.header.stamp = self.node.get_clock().now().to_msg()
         pos_msg.header.frame_id = self.topside_frame_id
         pos_msg.pose.position.x = float(east)
         pos_msg.pose.position.y = float(north)
