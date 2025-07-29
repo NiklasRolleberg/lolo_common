@@ -10,7 +10,7 @@ from rclpy.callback_groups import ReentrantCallbackGroup
 from rclpy.executors import MultiThreadedExecutor
 
 import time
-from std_msgs.msg import Bool
+from std_msgs.msg import Empty
 from geographic_msgs.msg import GeoPoint
 from smarc_mission_msgs.srv import GeoFenceChecker
 from smarc_mission_msgs.msg import Topics as MissionTopics
@@ -44,7 +44,7 @@ class GeoFenceCheckerClient(Node):
             1,
             callback_group=timer_callback_group)
         
-        self.publisher = self.create_publisher(Bool, 'inside_geofence', 10, callback_group=other_callback_group)
+        self.publisher = self.create_publisher(Empty, SmarcTopics.ABORT_TOPIC, 1, callback_group=other_callback_group)
         self.robot_position = GeoPoint()
 
         self.timer = self.create_timer(1, self.timer_callback, callback_group=timer_callback_group)
@@ -64,9 +64,9 @@ class GeoFenceCheckerClient(Node):
         if(self.future.done()):
             result = self.future.result()
             self.get_logger().info('Result: ' + str(result.valid))
-            msg = Bool()
-            msg.data = result.valid
-            self.publisher.publish(msg)
+            if(result.valid):
+                msg = Empty()
+                self.publisher.publish(msg)
             self.future = None
         
 
