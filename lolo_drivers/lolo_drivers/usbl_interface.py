@@ -309,9 +309,13 @@ class UsblInterface:
         # TODO: will the fact that the stamp is in the past affect ros in a way?
         pos_msg.header.stamp = self.node.get_clock().now().to_msg()
         pos_msg.header.frame_id = self.topside_frame_id
-        pos_msg.pose.position.x = float(east)
-        pos_msg.pose.position.y = float(north)
-        pos_msg.pose.position.z = float(up)
+        try:
+            pos_msg.pose.position.x = float(east)
+            pos_msg.pose.position.y = float(north)
+            pos_msg.pose.position.z = float(up)
+        except:
+            self.log.error("(UsblInterface) Trying to convert something not floaty to float.")
+            return
         self.usbl_relative_pub.publish(pos_msg)
 
     def send_for_transmission(self, msg, is_command=False):
