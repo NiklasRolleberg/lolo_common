@@ -451,7 +451,7 @@ class Ins2Odom(Node):
         #Attitude
         odom.pose.covariance[21 + 0] = self.current_ins.attitude_covariance[0] #rr
         odom.pose.covariance[27 + 1] = self.current_ins.attitude_covariance[3+1] #pp
-        odom.pose.covariance[33 + 1] = self.current_ins.attitude_covariance[6+2] #yy
+        odom.pose.covariance[33 + 2] = self.current_ins.attitude_covariance[6+2] #yy
 
         # Speed
         odom.pose.covariance[0] = self.current_ins.attitude_covariance[0] #xx
