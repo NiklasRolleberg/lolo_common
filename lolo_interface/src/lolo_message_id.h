@@ -17,6 +17,9 @@
 #define CS_THRUSTER_PORT    13
 #define CS_THRUSTER_STRB    14
 
+#define CS_EMSdFCUtoCapID 30
+#define CS_EMSdSYStoCapID 31
+
 #define CS_VTHRUSTER_1      61
 #define CS_VTHRUSTER_2      62
 #define CS_VTHRUSTER_3      63

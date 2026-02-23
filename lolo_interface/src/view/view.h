@@ -15,6 +15,9 @@
 #include "lolo_msgs/msg/temperatures.hpp"
 #include "sensor_msgs/msg/battery_state.hpp"
 
+#include "lolo_msgs/msg/fuel_celldata_fcu.hpp"
+#include "lolo_msgs/msg/fuel_celldata_sys.hpp"
+
 //View class publishes data from lolo to ros2 
 class View 
 {
@@ -62,6 +65,10 @@ class View
     //Satelite
     rclcpp::Publisher<std_msgs::msg::String>::SharedPtr satelite_pub;
 
+    //Fuelcell
+    rclcpp::Publisher<lolo_msgs::msg::FuelCelldataFCU>::SharedPtr fc_FCU_pub;
+    rclcpp::Publisher<lolo_msgs::msg::FuelCelldataSYS>::SharedPtr fc_SYS_pub;
+
     //callback functions
     void lolo_callback_LEAK();
     void lolo_callback_STATUS();
@@ -79,6 +86,8 @@ class View
     void lolo_callback_SATELITE_RECEIVED();
     void lolo_callback_TEMP();
     void lolo_callback_BARO();
+    void lolo_callback_FC_FCU();
+    void lolo_callback_FC_SYS();
 
 public:
     View(CaptainInterFace* _lolo, rclcpp::Node* _rcl_node);

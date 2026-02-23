@@ -4,6 +4,9 @@
 
 #include "lolo_msgs/msg/topics.hpp"
 
+#include <MiniCapHelpers/Split_Captain_struct.h>
+//#include <MiniCapHelpers/Captain_struct.h>
+
 View::View(CaptainInterFace* _lolo, rclcpp::Node* _rcl_node) {
     lolo = _lolo;
     rcl_node=_rcl_node;
@@ -49,7 +52,11 @@ void View::setup()
 
     //Satelite
     satelite_pub = rcl_node->create_publisher<std_msgs::msg::String>(lolo_msgs::msg::Topics::SATELITE_RECEIVED_TOPIC, 20);
-    
+
+    //Fuel cell
+    fc_FCU_pub = rcl_node->create_publisher<lolo_msgs::msg::FuelCelldataFCU>(lolo_msgs::msg::Topics::FUELCELL_FCU_TOPIC, 20);
+    fc_SYS_pub = rcl_node->create_publisher<lolo_msgs::msg::FuelCelldataSYS>(lolo_msgs::msg::Topics::FUELCELL_SYS_TOPIC, 20);
+
 
     printf("publishers created\n");
 }
@@ -80,6 +87,8 @@ void View::data_callback() {
         case CS_SATELITE_RECEIVED:  lolo_callback_SATELITE_RECEIVED(); break;
         case CS_TEMP: {             lolo_callback_TEMP();} break; //Data from temperature sensors inside lolo
         case CS_BARO: {             lolo_callback_BARO();} break; //Data from pressure sensors inside lolo
+        case CS_EMSdFCUtoCapID: {   lolo_callback_FC_FCU();} break; //Data from fuel cell system (FCU)
+        case CS_EMSdSYStoCapID: {   lolo_callback_FC_SYS();} break; //Data from fuel cell system (EMS & BMU)
     };
 };
 
@@ -508,3 +517,112 @@ void View::lolo_callback_BARO() {
   pressure_msg.battery2_isb = lolo->parse_float();
   pressure_pub->publish(pressure_msg);
 }
+
+void View::lolo_callback_FC_FCU() {
+  //std::cout << "FC data receuved (FCU) " << std::endl;
+
+  //CaptainRxData_t rxData;
+  CaptainFCURxData_t rxDataFCU;
+
+  // FCU packet
+  unpackFieldsFromCom(lolo,
+                      &rxDataFCU,
+                      captainFCURxDataFields,
+                      CAPTAIN_FCURXDATA_FIELD_COUNT);
+
+  //Publish ROS message with data
+  lolo_msgs::msg::FuelCelldataFCU fcu_msg;
+  fcu_msg.anode_pressure = rxDataFCU.ANODE_PRESSURE;
+  fcu_msg.cathode_pressure = rxDataFCU.CATHODE_PRESSURE;
+  fcu_msg.coolant_valve_position = rxDataFCU.COOLANT_VALVE_POSITION;
+  fcu_msg.o2_humidity = rxDataFCU.O2_HUMIDITY;
+  fcu_msg.h2_humidity = rxDataFCU.H2_HUMIDITY;
+  fcu_msg.h2_fresh_pressure = rxDataFCU.H2_FRESH_PRESSURE;
+  fcu_msg.o2_fresh_pressure = rxDataFCU.O2_FRESH_PRESSURE;
+  fcu_msg.anode_temperature = rxDataFCU.ANODE_TEMPERATURE;
+  fcu_msg.cathode_temperature = rxDataFCU.CATHODE_TEMPERATURE;
+  fcu_msg.o2_fresh_temp = rxDataFCU.O2_FRESH_TEMP;
+  fcu_msg.h2_fresh_temp = rxDataFCU.H2_FRESH_TEMP;
+  fcu_msg.o2_temp = rxDataFCU.O2_TEMP;
+  fcu_msg.h2_temp = rxDataFCU.H2_TEMP;
+  fcu_msg.stack_current = rxDataFCU.STACK_CURRENT;
+  fcu_msg.stack_voltage = rxDataFCU.STACK_VOLTAGE;
+  fcu_msg.bat_voltage = rxDataFCU.BAT_VOLTAGE;
+  fcu_msg.min_cell_voltage = rxDataFCU.MIN_CELL_VOLTAGE;
+  fcu_msg.max_cell_voltage = rxDataFCU.MAX_CELL_VOLTAGE;
+  fcu_msg.avg_cell_voltage = rxDataFCU.AVG_CELL_VOLTAGE;
+  fcu_msg.h2_concentration = rxDataFCU.H2_CONCENTRATION;
+  fcu_msg.monitor_safety_state = rxDataFCU.MONITOR_SAFETY_STATE;
+  fcu_msg.safety_fault = rxDataFCU.SAFETY_FAULT;
+  fcu_msg.startup_status = rxDataFCU.STARTUP_STATUS;
+  fcu_msg.shutdown_status = rxDataFCU.SHUTDOWN_STATUS;
+  fcu_msg.feedback_control_setpoint = rxDataFCU.FEEDBACK_CONTROL_SETPOINT;
+  fcu_msg.stack_current_setpoint = rxDataFCU.STACK_CURRENT_SETPOINT;
+  fcu_msg.air_pump_knf_setpoint = rxDataFCU.AIR_PUMP_KNF_SETPOINT;
+  fcu_msg.oxygen_cutoff_setpoint = rxDataFCU.OXYGEN_CUTOFF_SETPOINT;
+  fcu_msg.h2_pump_knf_setpoint = rxDataFCU.H2_PUMP_KNF_SETPOINT;
+  fcu_msg.coolant_pump_setpoint = rxDataFCU.COOLANT_PUMP_SETPOINT;
+  fcu_msg.h2_fresh_setpoint = rxDataFCU.H2_FRESH_SETPOINT;
+  fcu_msg.contactor_setpoint = rxDataFCU.CONTACTOR_SETPOINT;
+  fcu_msg.purge_valve_setpoint = rxDataFCU.PURGE_VALVE_SETPOINT;
+  fcu_msg.o2_fresh_setpoint = rxDataFCU.O2_FRESH_SETPOINT;
+  fcu_msg.power_cycle_dcdc_cvm_setpoint = rxDataFCU.POWER_CYCLE_DCDC_CVM_SETPOINT;
+  fcu_msg.safety_state = rxDataFCU.SAFETY_STATE;
+  fcu_msg.safety_active_mask   = rxDataFCU.SAFETY_ACTIVE_MASK ;
+  fcu_msg.safety_latched_mask = rxDataFCU.SAFETY_LATCHED_MASK;
+  fcu_msg.safety_active_count = rxDataFCU.SAFETY_ACTIVE_COUNT;
+  fcu_msg.safety_total_count = rxDataFCU.SAFETY_TOTAL_COUNT ;
+  fcu_msg.ms_since_boot = rxDataFCU.MS_SINCE_BOOT;
+
+  fc_FCU_pub->publish(fcu_msg);
+  
+};
+
+void View::lolo_callback_FC_SYS() {
+  //std::cout << "FC data receuved (EMS & BMU) " << std::endl;
+
+  //CaptainRxData_t rxData;
+  CaptainSystemRxData_t rxDataSys;
+
+  // System (BMU+EMS) packet
+  unpackFieldsFromCom(lolo,
+                      &rxDataSys,
+                      captainSystemRxDataFields,
+                      CAPTAIN_SYSTEMRXDATA_FIELD_COUNT);
+  
+  lolo_msgs::msg::FuelCelldataSYS sys_msg;
+  
+  for(int i=0;i<8;i++) {
+    sys_msg.bmu_cell_voltage[i] = rxDataSys.BMU_CELL_VOLTAGE[i];
+  }
+  sys_msg.bmu_battery_voltage = rxDataSys.BMU_BATTERY_VOLTAGE;
+  sys_msg.bmu_battery_current = rxDataSys.BMU_BATTERY_CURRENT;
+  sys_msg.bmu_soc = rxDataSys.BMU_SOC;
+  sys_msg.bmu_status = rxDataSys.BMU_STATUS;
+  sys_msg.bmu_temp_bms_board = rxDataSys.BMU_TEMP_BMS_BOARD;
+  sys_msg.bmu_temp_sensor_1 = rxDataSys.BMU_TEMP_SENSOR_1;
+  sys_msg.bmu_temp_sensor_2 = rxDataSys.BMU_TEMP_SENSOR_2;
+  sys_msg.bmu_main_switch = rxDataSys.BMU_MAIN_SWITCH;
+  sys_msg.bmu_allow_on = rxDataSys.BMU_ALLOW_ON;
+  sys_msg.bmu_load_enable = rxDataSys.BMU_LOAD_ENABLE;
+  sys_msg.bmu_charge_enable = rxDataSys.BMU_CHARGE_ENABLE;
+  sys_msg.bmu_supply_voltage = rxDataSys.BMU_SUPPLY_VOLTAGE;
+  sys_msg.bmu_current = rxDataSys.BMU_CURRENT;
+  sys_msg.bmu_pressure = rxDataSys.BMU_PRESSURE;
+  sys_msg.bmu_leak_detected = rxDataSys.BMU_LEAK_DETECTED;
+  sys_msg.bmu_timestamp = rxDataSys.BMU_TIMESTAMP;
+  sys_msg.ems_fcu_current = rxDataSys.EMS_FCU_current;
+  sys_msg.ems_load_current = rxDataSys.EMS_Load_current;
+  sys_msg.ems_system_state = rxDataSys.EMS_SYSTEM_STATE;
+  sys_msg.ems_comms_status = rxDataSys.EMS_COMMS_STATUS;
+  sys_msg.ems_power_setpoint = rxDataSys.EMS_POWER_SETPOINT;
+  sys_msg.ems_h2_consumption = rxDataSys.EMS_H2_CONSUMPTION;
+  sys_msg.ems_o2_consumption = rxDataSys.EMS_O2_CONSUMPTION;
+  sys_msg.ems_stack_power = rxDataSys.EMS_STACK_POWER;
+  sys_msg.ems_fcu_power = rxDataSys.EMS_FCU_POWER;
+  sys_msg.ems_load_power = rxDataSys.EMS_LOAD_POWER;
+  sys_msg.txkernelcount = rxDataSys.txKernelCount;
+
+  fc_SYS_pub->publish(sys_msg);
+};
+

@@ -26,11 +26,17 @@ set (UDP_INTERFACE_SRC
   lib/udpinterface/UDPInterface.cpp
 )
 
+set (MINICAP_SRC
+  lib/MiniCapHelpers/helper.cpp
+)
+
 add_executable(lolo_interface 
   src/interface.cpp
   src/view/view.cpp 
   src/controller/controller.cpp 
-  ${UDP_INTERFACE_SRC})
+  ${UDP_INTERFACE_SRC}
+  ${MINICAP_SRC})
+  
 ament_target_dependencies(lolo_interface 
   rclcpp 
   std_msgs
