@@ -70,7 +70,7 @@ public:
 
 class HealthChecker : public rclcpp::Node {
  public:
-  HealthChecker() : Node("evolo_health_checker_cpp") {
+  HealthChecker() : Node("health_checker_cpp") {
 
     //Subscribers
     // odom;
@@ -98,7 +98,7 @@ class HealthChecker : public rclcpp::Node {
         1000ms, std::bind(&HealthChecker::timer_callback, this));
 
     //Health output pub
-    _health_pub = this->create_publisher<std_msgs::msg::Int8>("/evolo/smarc/vehicle_health", 10);
+    _health_pub = this->create_publisher<std_msgs::msg::Int8>(smarc_msgs::msg::Topics::VEHICLE_HEALTH_TOPIC, 10);
   }
 
  public:
