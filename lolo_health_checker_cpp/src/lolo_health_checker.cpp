@@ -4,7 +4,7 @@
  */
 #include <chrono>
 #include <iostream>
-
+#include <time.h>
 #include "rclcpp/rclcpp.hpp"
 #include "tf2/exceptions.h"
 #include "tf2_ros/transform_listener.h"
@@ -146,7 +146,7 @@ class HealthChecker : public rclcpp::Node {
   std_msgs::msg::Float32 depth_message;
   bool depth_received;
   bool depth_updated;
-  float dive_start_time;
+  double dive_start_time;
 
   //Error buckets
   ErrorBucket odom_value_error_bucket;
@@ -175,7 +175,7 @@ class HealthChecker : public rclcpp::Node {
 
     //Check if we are diving
     if (depth_message.data < 1.0) {
-        dive_start_time = rclcpp::Clock{}.now().seconds();
+        dive_start_time = time(0);
     }
   }
 
@@ -260,7 +260,9 @@ class HealthChecker : public rclcpp::Node {
     }
 
     //dive time
-    double now = rclcpp::Clock{}.now().seconds();
+    double now = time(0);
+    double diveTime = now - dive_start_time;
+    std::cout << "DiveTIme: " << diveTime << std::endl;
     if(now - dive_start_time > max_diveTime) {
       std::cout << "Max dive time exceded" << std::endl;
       health_msg.data = smarc_msgs::msg::Topics::VEHICLE_HEALTH_ERROR; //All bad
