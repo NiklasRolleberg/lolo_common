@@ -105,7 +105,7 @@ class HealthChecker : public rclcpp::Node {
   
   //Settings?
   //TODO rosparam
-  float dive_depth_threshold = -0.5; //(ENU)
+  float dive_depth_threshold = -0.04485957324504852; //(ENU) (-0.5)
   float altitude_limit = 0.5; //(ENU)
   float altitude_limit_at_speed = 1.5; //(ENU)
   double max_diveTime = 1800; //s
@@ -164,6 +164,11 @@ class HealthChecker : public rclcpp::Node {
     odom_message = msg;
     odom_received = true;
     odom_updated = true;
+
+    //Check if we are diving
+    if (odom_message.pose.pose.position.z < dive_depth_threshold) {
+        dive_start_time = time(0);
+    }
   }
 
   // -----------------------------------------------------------------------
@@ -172,11 +177,6 @@ class HealthChecker : public rclcpp::Node {
     depth_message = msg;
     depth_received = true;
     depth_updated = true;
-
-    //Check if we are diving
-    if (depth_message.data < 1.0) {
-        dive_start_time = time(0);
-    }
   }
 
   // -----------------------------------------------------------------------
