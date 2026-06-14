@@ -87,8 +87,9 @@ class HealthChecker : public rclcpp::Node {
     _depth_sub = this->create_subscription<std_msgs::msg::Float32>(
       smarc_msgs::msg::Topics::DEPTH_TOPIC, 10,
       std::bind(&HealthChecker::depthCallback, this, std::placeholders::_1));
+    dive_start_time = time(0);
 
-    //depth
+    //altitude
     _altitude_sub = this->create_subscription<std_msgs::msg::Float32>(
       smarc_msgs::msg::Topics::ALTITUDE_TOPIC, 10,
       std::bind(&HealthChecker::altitudeCallback, this, std::placeholders::_1));
@@ -105,7 +106,7 @@ class HealthChecker : public rclcpp::Node {
   
   //Settings?
   //TODO rosparam
-  float dive_depth_threshold = -0.04485957324504852; //(ENU) (-0.5)
+  float dive_depth_threshold = -0.5; //(ENU) (-0.5)
   float altitude_limit = 0.5; //(ENU)
   float altitude_limit_at_speed = 1.5; //(ENU)
   double max_diveTime = 1800; //s
@@ -166,7 +167,7 @@ class HealthChecker : public rclcpp::Node {
     odom_updated = true;
 
     //Check if we are diving
-    if (odom_message.pose.pose.position.z < dive_depth_threshold) {
+    if (odom_message.pose.pose.position.z > dive_depth_threshold) {
         dive_start_time = time(0);
     }
   }
