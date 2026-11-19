@@ -30,15 +30,15 @@ void View::setup()
     rudder_pub = rcl_node->create_publisher<lolo_msgs::msg::VolzServo>(lolo_msgs::msg::Topics::EXTENDED_RUDDER_FB_TOPIC, 1);
     elevator_pub = rcl_node->create_publisher<lolo_msgs::msg::VolzServo>(lolo_msgs::msg::Topics::EXTENDED_ELEVATOR_FB_TOPIC, 1);
     elevon_port_pub = rcl_node->create_publisher<lolo_msgs::msg::VolzServo>(lolo_msgs::msg::Topics::EXTENDED_PORT_ELEVON_FB_TOPIC, 1);
-    elevon_strb_pub = rcl_node->create_publisher<lolo_msgs::msg::VolzServo>(lolo_msgs::msg::Topics::EXTENDED_STRB_ELEVON_FB_TOPIC, 1);
+    elevon_stbd_pub = rcl_node->create_publisher<lolo_msgs::msg::VolzServo>(lolo_msgs::msg::Topics::EXTENDED_STBD_ELEVON_FB_TOPIC, 1);
 
     //Thrusters
     thruster_port_pub = rcl_node->create_publisher<lolo_msgs::msg::VescFeedback>(lolo_msgs::msg::Topics::EXTENDED_PORT_THRUSTER_FB_TOPIC, 1);
-    thruster_strb_pub = rcl_node->create_publisher<lolo_msgs::msg::VescFeedback>(lolo_msgs::msg::Topics::EXTENDED_STRB_THRUSTER_FB_TOPIC, 1);
+    thruster_stbd_pub = rcl_node->create_publisher<lolo_msgs::msg::VescFeedback>(lolo_msgs::msg::Topics::EXTENDED_STBD_THRUSTER_FB_TOPIC, 1);
     vertical_thruster_1_pub = rcl_node->create_publisher<lolo_msgs::msg::VescFeedback>(lolo_msgs::msg::Topics::EXTENDED_VERTICAL_THRUSTER_FRONT_PORT_FB_TOPIC, 1);
-    vertical_thruster_2_pub = rcl_node->create_publisher<lolo_msgs::msg::VescFeedback>(lolo_msgs::msg::Topics::EXTENDED_VERTICAL_THRUSTER_FRONT_STRB_FB_TOPIC, 1);
+    vertical_thruster_2_pub = rcl_node->create_publisher<lolo_msgs::msg::VescFeedback>(lolo_msgs::msg::Topics::EXTENDED_VERTICAL_THRUSTER_FRONT_STBD_FB_TOPIC, 1);
     vertical_thruster_3_pub = rcl_node->create_publisher<lolo_msgs::msg::VescFeedback>(lolo_msgs::msg::Topics::EXTENDED_VERTICAL_THRUSTER_BACK_PORT_FB_TOPIC, 1);
-    vertical_thruster_4_pub = rcl_node->create_publisher<lolo_msgs::msg::VescFeedback>(lolo_msgs::msg::Topics::EXTENDED_VERTICAL_THRUSTER_BACK_STRB_FB_TOPIC, 1);
+    vertical_thruster_4_pub = rcl_node->create_publisher<lolo_msgs::msg::VescFeedback>(lolo_msgs::msg::Topics::EXTENDED_VERTICAL_THRUSTER_BACK_STBD_FB_TOPIC, 1);
     
     //Batteries
     battery1_pub = rcl_node->create_publisher<sensor_msgs::msg::BatteryState>(lolo_msgs::msg::Topics::EXTENDED_BATTERY_1_TOPIC, 1);
@@ -66,9 +66,9 @@ void View::data_callback() {
         case CS_RUDDER: {           lolo_callback_RUDDER(); } break; // rudder
         case CS_ELEVATOR: {         lolo_callback_ELEVATOR(); } break; //elevator
         case CS_ELEVON_PORT: {      lolo_callback_ELEVON_PORT(); } break; //Port elevon
-        case CS_ELEVON_STRB: {      lolo_callback_ELEVON_STRB(); } break; //Strb elevon
+        case CS_ELEVON_STBD: {      lolo_callback_ELEVON_STBD(); } break; //Stbd elevon
         case CS_THRUSTER_PORT: {    lolo_callback_THRUSTER_PORT(); } break; //port thruster
-        case CS_THRUSTER_STRB: {    lolo_callback_THRUSTER_STRB(); } break; //strb thruster
+        case CS_THRUSTER_STBD: {    lolo_callback_THRUSTER_STBD(); } break; //stbd thruster
         case CS_VTHRUSTER_1:{       lolo_callback_VERTICAL_THRUSTER(msgID); } break; //vertical thruster
         case CS_VTHRUSTER_2:{       lolo_callback_VERTICAL_THRUSTER(msgID); } break; //vertical thruster
         case CS_VTHRUSTER_3:{       lolo_callback_VERTICAL_THRUSTER(msgID); } break; //vertical thruster
@@ -261,7 +261,7 @@ void View::lolo_callback_ELEVON_PORT() {
   elevon_port_pub->publish(feedback_msg);
 }
 
-void View::lolo_callback_ELEVON_STRB() {
+void View::lolo_callback_ELEVON_STBD() {
   //uint64_t timestamp    = lolo->parse_llong(); // timestamp from ISB
   //uint64_t sec = timestamp / 1000000;
   //uint64_t usec = timestamp % 1000000;
@@ -284,7 +284,7 @@ void View::lolo_callback_ELEVON_STRB() {
   //feedback_msg.humidity = humidity;
   feedback_msg.pcbtemp = pcbtemp;
   feedback_msg.motortemp = motortemp;
-  elevon_strb_pub->publish(feedback_msg);
+  elevon_stbd_pub->publish(feedback_msg);
 }
 
 void View::lolo_callback_THRUSTER_PORT() {
@@ -313,7 +313,7 @@ void View::lolo_callback_THRUSTER_PORT() {
   thruster_port_pub->publish(vesc_feedback_msg);
 }
 
-void View::lolo_callback_THRUSTER_STRB() {
+void View::lolo_callback_THRUSTER_STBD() {
   //uint64_t timestamp    = lolo->parse_llong(); //timestamp from ISB
   //uint32_t sequence     = lolo->parse_long();  //sequence of this message
   lolo->parse_llong(); // Read timstamp and don't do anytihing with it
@@ -336,7 +336,7 @@ void View::lolo_callback_THRUSTER_STRB() {
   vesc_feedback_msg.motor_current = motor_current;
   vesc_feedback_msg.temp_mosfet = tempMosfet;
   
-  thruster_strb_pub->publish(vesc_feedback_msg);
+  thruster_stbd_pub->publish(vesc_feedback_msg);
 }
 
 void View::lolo_callback_VERTICAL_THRUSTER(int thruster_id) {
@@ -418,7 +418,7 @@ void View::lolo_callback_BATTERY(int id) {
       battery1_pub->publish(battery_msg); 
       break;
     case CS_BATTERY2: 
-      battery_msg.location = "strb battery";
+      battery_msg.location = "stbd battery";
       battery2_pub->publish(battery_msg); 
       break;
   default:
@@ -470,11 +470,11 @@ void View::lolo_callback_TEMP()
   temperature_msg.rudder_pcb = lolo->parse_byte();
   temperature_msg.elevon_port_motor = lolo->parse_byte();
   temperature_msg.elevon_port_pcb = lolo->parse_byte();
-  temperature_msg.elevon_strb_motor = lolo->parse_byte();
-  temperature_msg.elevon_strb_pcb = lolo->parse_byte();
+  temperature_msg.elevon_stbd_motor = lolo->parse_byte();
+  temperature_msg.elevon_stbd_pcb = lolo->parse_byte();
   temperature_msg.thruster_isb = lolo->parse_byte();
   temperature_msg.port_esc = lolo->parse_byte();
-  temperature_msg.strb_esc = lolo->parse_byte();
+  temperature_msg.stbd_esc = lolo->parse_byte();
   temperature_msg.vertical_thruster_isb = lolo->parse_byte();
   temperature_msg.vertical_thruster_1_esc = lolo->parse_byte();
   temperature_msg.vertical_thruster_2_esc = lolo->parse_byte();

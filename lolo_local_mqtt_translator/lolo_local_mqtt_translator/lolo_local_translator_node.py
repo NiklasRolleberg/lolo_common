@@ -59,7 +59,7 @@ class Translator_node(Node):
         # Map: ROS topic -> short key used in the MQTT payload.
         self.thruster_topics = {
             '/lolo/extended/actuators/thruster_port_fb': 'port',
-            '/lolo/extended/actuators/thruster_strb_fb': 'strb',
+            '/lolo/extended/actuators/thruster_stbd_fb': 'strb',
             # --- vertical thrusters: confirm the EXACT ROS topic names, then uncomment ---
             # '/lolo/extended/actuators/vertical_thruster_1_fb': 'vt1',
             # '/lolo/extended/actuators/vertical_thruster_2_fb': 'vt2',
@@ -281,11 +281,11 @@ class Translator_node(Node):
                 "rudder_pcb":              msg.rudder_pcb,
                 "elevon_port_motor":       msg.elevon_port_motor,
                 "elevon_port_pcb":         msg.elevon_port_pcb,
-                "elevon_strb_motor":       msg.elevon_strb_motor,
-                "elevon_strb_pcb":         msg.elevon_strb_pcb,
+                "elevon_strb_motor":       msg.elevon_stbd_motor,
+                "elevon_strb_pcb":         msg.elevon_stbd_pcb,
                 "thruster_isb":            msg.thruster_isb,
                 "port_esc":                msg.port_esc,
-                "strb_esc":                msg.strb_esc,
+                "strb_esc":                msg.stbd_esc,
                 "vertical_thruster_isb":   msg.vertical_thruster_isb,
                 "vertical_thruster_1_esc": msg.vertical_thruster_1_esc,
                 "vertical_thruster_2_esc": msg.vertical_thruster_2_esc,

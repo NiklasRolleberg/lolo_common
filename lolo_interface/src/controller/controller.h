@@ -31,10 +31,10 @@ private:
     rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr rudder_cmd_sub;
     rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr elevator_cmd_sub;
     rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr elevon_port_cmd_sub;
-    rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr elevon_strb_cmd_sub;
+    rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr elevon_stbd_cmd_sub;
 
     rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr thruster_port_cmd_sub;
-    rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr thruster_strb_cmd_sub;
+    rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr thruster_stbd_cmd_sub;
     rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr vertical_thruster_1_cmd_sub;
     rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr vertical_thruster_2_cmd_sub;
     rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr vertical_thruster_3_cmd_sub;
@@ -57,10 +57,10 @@ private:
     void rudder_callback(const std_msgs::msg::Float32::SharedPtr msg);
     void elevator_callback(const std_msgs::msg::Float32::SharedPtr msg);
     void elevon_port_callback(const std_msgs::msg::Float32::SharedPtr msg);
-    void elevon_strb_callback(const std_msgs::msg::Float32::SharedPtr msg);
+    void elevon_stbd_callback(const std_msgs::msg::Float32::SharedPtr msg);
 
     void thruster_port_callback(const std_msgs::msg::Float32::SharedPtr msg);
-    void thruster_strb_callback(const std_msgs::msg::Float32::SharedPtr msg);
+    void thruster_stbd_callback(const std_msgs::msg::Float32::SharedPtr msg);
     void vertical_thruster_1_callback(const std_msgs::msg::Float32::SharedPtr msg);
     void vertical_thruster_2_callback(const std_msgs::msg::Float32::SharedPtr msg);
     void vertical_thruster_3_callback(const std_msgs::msg::Float32::SharedPtr msg);

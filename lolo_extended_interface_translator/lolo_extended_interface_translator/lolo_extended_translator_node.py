@@ -16,9 +16,9 @@ class Translator_node(Node):
         self.pub_elevon_port_fb = self.create_publisher(Float32, Topics.ELEVON_PORT_FB, 2)
         self.sub_elevon_port_fb = self.create_subscription(VolzServo,Topics.EXTENDED_PORT_ELEVON_FB_TOPIC,self.callback_elevon_port_fb,1)
 
-        #Elevon strb fb
-        self.pub_elevon_strb_fb = self.create_publisher(Float32, Topics.ELEVON_STRB_FB, 2)
-        self.sub_elevon_strb_fb = self.create_subscription(VolzServo,Topics.EXTENDED_STRB_ELEVON_FB_TOPIC,self.callback_elevon_strb_fb,1)
+        #Elevon stbd fb
+        self.pub_elevon_stbd_fb = self.create_publisher(Float32, Topics.ELEVON_STBD_FB, 2)
+        self.sub_elevon_stbd_fb = self.create_subscription(VolzServo,Topics.EXTENDED_STBD_ELEVON_FB_TOPIC,self.callback_elevon_stbd_fb,1)
 
         #Elevator
         self.pub_elevator_fb = self.create_publisher(Float32, Topics.ELEVATOR_FB, 2)
@@ -33,19 +33,19 @@ class Translator_node(Node):
         self.sub_thruster_port_fb = self.create_subscription(VescFeedback,Topics.EXTENDED_PORT_THRUSTER_FB_TOPIC,self.callback_thruster_port_fb,1)
 
         #port thruster
-        self.pub_thruster_strb_fb = self.create_publisher(Float32, Topics.THRUSTER_STRB_FB, 2)
-        self.sub_thruster_strb_fb = self.create_subscription(VescFeedback,Topics.EXTENDED_STRB_THRUSTER_FB_TOPIC,self.callback_thruster_strb_fb,1)
+        self.pub_thruster_stbd_fb = self.create_publisher(Float32, Topics.THRUSTER_STBD_FB, 2)
+        self.sub_thruster_stbd_fb = self.create_subscription(VescFeedback,Topics.EXTENDED_STBD_THRUSTER_FB_TOPIC,self.callback_thruster_stbd_fb,1)
 
         #Vertical thrusters
         self.pub_vertical_thruster_1_fb = self.create_publisher(Float32, Topics.VERTICAL_THRUSTER_FRONT_PORT_FB, 2)
-        self.pub_vertical_thruster_2_fb = self.create_publisher(Float32, Topics.VERTICAL_THRUSTER_FRONT_STRB_FB, 2)
+        self.pub_vertical_thruster_2_fb = self.create_publisher(Float32, Topics.VERTICAL_THRUSTER_FRONT_STBD_FB, 2)
         self.pub_vertical_thruster_3_fb = self.create_publisher(Float32, Topics.VERTICAL_THRUSTER_BACK_PORT_FB, 2)
-        self.pub_vertical_thruster_4_fb = self.create_publisher(Float32, Topics.VERTICAL_THRUSTER_BACK_STRB_FB, 2)
+        self.pub_vertical_thruster_4_fb = self.create_publisher(Float32, Topics.VERTICAL_THRUSTER_BACK_STBD_FB, 2)
 
         self.sub_vertical_thruster_1_fb = self.create_subscription(VescFeedback,Topics.EXTENDED_VERTICAL_THRUSTER_FRONT_PORT_FB_TOPIC,self.callback_vertical_thruster_1_fb,1)
-        self.sub_vertical_thruster_2_fb = self.create_subscription(VescFeedback,Topics.EXTENDED_VERTICAL_THRUSTER_FRONT_STRB_FB_TOPIC,self.callback_vertical_thruster_2_fb,1)
+        self.sub_vertical_thruster_2_fb = self.create_subscription(VescFeedback,Topics.EXTENDED_VERTICAL_THRUSTER_FRONT_STBD_FB_TOPIC,self.callback_vertical_thruster_2_fb,1)
         self.sub_vertical_thruster_3_fb = self.create_subscription(VescFeedback,Topics.EXTENDED_VERTICAL_THRUSTER_BACK_PORT_FB_TOPIC,self.callback_vertical_thruster_3_fb,1)
-        self.sub_vertical_thruster_4_fb = self.create_subscription(VescFeedback,Topics.EXTENDED_VERTICAL_THRUSTER_BACK_STRB_FB_TOPIC,self.callback_vertical_thruster_4_fb,1)
+        self.sub_vertical_thruster_4_fb = self.create_subscription(VescFeedback,Topics.EXTENDED_VERTICAL_THRUSTER_BACK_STBD_FB_TOPIC,self.callback_vertical_thruster_4_fb,1)
 
 
     def callback_elevon_port_fb(self, msg):
@@ -54,10 +54,10 @@ class Translator_node(Node):
         self.pub_elevon_port_fb.publish(fb_angle)
         #print(str(msg))
 
-    def callback_elevon_strb_fb(self, msg):
+    def callback_elevon_stbd_fb(self, msg):
         fb_angle = Float32()
         fb_angle.data = msg.angle
-        self.pub_elevon_strb_fb.publish(fb_angle)
+        self.pub_elevon_stbd_fb.publish(fb_angle)
         #print(str(msg))
     
     def callback_elevator_fb(self, msg):
@@ -78,10 +78,10 @@ class Translator_node(Node):
         self.pub_thruster_port_fb.publish(fb_rpm)
         #rint(str(msg))
 
-    def callback_thruster_strb_fb(self, msg):
+    def callback_thruster_stbd_fb(self, msg):
         fb_rpm = Float32()
         fb_rpm.data = msg.rpm
-        self.pub_thruster_strb_fb.publish(fb_rpm)
+        self.pub_thruster_stbd_fb.publish(fb_rpm)
         #print(str(msg))
 
     def callback_vertical_thruster_1_fb(self,msg):

@@ -42,11 +42,11 @@ class View
     rclcpp::Publisher<lolo_msgs::msg::VolzServo>::SharedPtr rudder_pub;
     rclcpp::Publisher<lolo_msgs::msg::VolzServo>::SharedPtr elevator_pub;
     rclcpp::Publisher<lolo_msgs::msg::VolzServo>::SharedPtr elevon_port_pub;
-    rclcpp::Publisher<lolo_msgs::msg::VolzServo>::SharedPtr elevon_strb_pub;
+    rclcpp::Publisher<lolo_msgs::msg::VolzServo>::SharedPtr elevon_stbd_pub;
 
     //Thrusters
     rclcpp::Publisher<lolo_msgs::msg::VescFeedback>::SharedPtr thruster_port_pub;
-    rclcpp::Publisher<lolo_msgs::msg::VescFeedback>::SharedPtr thruster_strb_pub;
+    rclcpp::Publisher<lolo_msgs::msg::VescFeedback>::SharedPtr thruster_stbd_pub;
     rclcpp::Publisher<lolo_msgs::msg::VescFeedback>::SharedPtr vertical_thruster_1_pub;
     rclcpp::Publisher<lolo_msgs::msg::VescFeedback>::SharedPtr vertical_thruster_2_pub;
     rclcpp::Publisher<lolo_msgs::msg::VescFeedback>::SharedPtr vertical_thruster_3_pub;
@@ -68,9 +68,9 @@ class View
     void lolo_callback_RUDDER();
     void lolo_callback_ELEVATOR();
     void lolo_callback_ELEVON_PORT();
-    void lolo_callback_ELEVON_STRB();
+    void lolo_callback_ELEVON_STBD();
     void lolo_callback_THRUSTER_PORT();
-    void lolo_callback_THRUSTER_STRB();
+    void lolo_callback_THRUSTER_STBD();
     void lolo_callback_VERTICAL_THRUSTER(int thruster_id);
     void lolo_callback_BATTERY(int id);
     void lolo_callback_MENUSTREAM();

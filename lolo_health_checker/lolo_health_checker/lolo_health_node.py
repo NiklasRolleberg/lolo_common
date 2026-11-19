@@ -234,11 +234,11 @@ class HealthNode(Node):
             "rudder_pcb": [],
             "elevon_port_motor": [],
             "elevon_port_pcb": [],
-            "elevon_strb_motor": [],
-            "elevon_strb_pcb": [],
+            "elevon_stbd_motor": [],
+            "elevon_stbd_pcb": [],
             "thruster_isb": [],
             "port_esc": [],
-            'strb_esc': [],
+            'stbd_esc': [],
             "vertical_thruster_isb": [],
             "vertical_thruster_1_esc": [],
             "vertical_thruster_2_esc": [],
@@ -301,8 +301,8 @@ class HealthNode(Node):
         if(self.current_temperature.elevator_pcb == 205): self.current_temperature.elevator_pcb = 20.0
         if(self.current_temperature.elevon_port_motor == 205): self.current_temperature.elevon_port_motor = 20.0
         if(self.current_temperature.elevon_port_pcb == 205): self.current_temperature.elevon_port_pcb = 20.0
-        if(self.current_temperature.elevon_strb_motor == 205): self.current_temperature.elevon_strb_motor = 20.0
-        if(self.current_temperature.elevon_strb_pcb == 205): self.current_temperature.elevon_strb_pcb = 20.0
+        if(self.current_temperature.elevon_stbd_motor == 205): self.current_temperature.elevon_stbd_motor = 20.0
+        if(self.current_temperature.elevon_stbd_pcb == 205): self.current_temperature.elevon_stbd_pcb = 20.0
 
     def altitude_callback(self, msg):
         self.current_altitude = msg.data

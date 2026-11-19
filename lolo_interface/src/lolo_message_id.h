@@ -15,7 +15,7 @@
 #define CS_RUDDER           10
 #define CS_ELEVATOR         12
 #define CS_THRUSTER_PORT    13
-#define CS_THRUSTER_STRB    14
+#define CS_THRUSTER_STBD    14
 
 #define CS_VTHRUSTER_1      61
 #define CS_VTHRUSTER_2      62
@@ -27,7 +27,7 @@
 #define CS_TEMP             16 //Internal temperatures
 #define CS_BARO             17 //Internal pressures
 
-#define CS_ELEVON_STRB      21
+#define CS_ELEVON_STBD      21
 #define CS_ELEVON_PORT      22
 #define CS_USBL_RECEIVED    41
 #define CS_SATELITE_RECEIVED 43
@@ -39,11 +39,11 @@
 #define SC_DROP_WEIGHT           153
 
 #define SC_SET_ELEVON_PORT       159
-#define SC_SET_ELEVON_STRB       160
+#define SC_SET_ELEVON_STBD       160
 #define SC_SET_RUDDER            161
 #define SC_SET_ELEVATOR          162
 #define SC_SET_THRUSTER_PORT     163
-#define SC_SET_THRUSTER_STRB     164
+#define SC_SET_THRUSTER_STBD     164
 #define SC_SET_VTHRUSTER_1      61
 #define SC_SET_VTHRUSTER_2      62
 #define SC_SET_VTHRUSTER_3      63

@@ -23,14 +23,14 @@ void Controller::setup() {
     rudder_cmd_sub = rcl_node->create_subscription<std_msgs::msg::Float32>(lolo_msgs::msg::Topics::RUDDER_CMD, 1, std::bind(&Controller::rudder_callback, this, std::placeholders::_1));
     elevator_cmd_sub = rcl_node->create_subscription<std_msgs::msg::Float32>(lolo_msgs::msg::Topics::ELEVATOR_CMD, 1, std::bind(&Controller::elevator_callback, this, std::placeholders::_1));
     elevon_port_cmd_sub = rcl_node->create_subscription<std_msgs::msg::Float32>(lolo_msgs::msg::Topics::ELEVON_PORT_CMD, 1, std::bind(&Controller::elevon_port_callback, this, std::placeholders::_1));
-    elevon_strb_cmd_sub = rcl_node->create_subscription<std_msgs::msg::Float32>(lolo_msgs::msg::Topics::ELEVON_STRB_CMD, 1, std::bind(&Controller::elevon_strb_callback, this, std::placeholders::_1));
+    elevon_stbd_cmd_sub = rcl_node->create_subscription<std_msgs::msg::Float32>(lolo_msgs::msg::Topics::ELEVON_STBD_CMD, 1, std::bind(&Controller::elevon_stbd_callback, this, std::placeholders::_1));
     
     thruster_port_cmd_sub = rcl_node->create_subscription<std_msgs::msg::Float32>(lolo_msgs::msg::Topics::THRUSTER_PORT_CMD, 1, std::bind(&Controller::thruster_port_callback, this, std::placeholders::_1));
-    thruster_strb_cmd_sub = rcl_node->create_subscription<std_msgs::msg::Float32>(lolo_msgs::msg::Topics::THRUSTER_STRB_CMD, 1, std::bind(&Controller::thruster_strb_callback, this, std::placeholders::_1));
+    thruster_stbd_cmd_sub = rcl_node->create_subscription<std_msgs::msg::Float32>(lolo_msgs::msg::Topics::THRUSTER_STBD_CMD, 1, std::bind(&Controller::thruster_stbd_callback, this, std::placeholders::_1));
     vertical_thruster_1_cmd_sub = rcl_node->create_subscription<std_msgs::msg::Float32>(lolo_msgs::msg::Topics::VERTICAL_THRUSTER_FRONT_PORT_CMD, 1, std::bind(&Controller::vertical_thruster_1_callback, this, std::placeholders::_1));
-    vertical_thruster_2_cmd_sub = rcl_node->create_subscription<std_msgs::msg::Float32>(lolo_msgs::msg::Topics::VERTICAL_THRUSTER_FRONT_STRB_CMD, 1, std::bind(&Controller::vertical_thruster_2_callback, this, std::placeholders::_1));
+    vertical_thruster_2_cmd_sub = rcl_node->create_subscription<std_msgs::msg::Float32>(lolo_msgs::msg::Topics::VERTICAL_THRUSTER_FRONT_STBD_CMD, 1, std::bind(&Controller::vertical_thruster_2_callback, this, std::placeholders::_1));
     vertical_thruster_3_cmd_sub = rcl_node->create_subscription<std_msgs::msg::Float32>(lolo_msgs::msg::Topics::VERTICAL_THRUSTER_BACK_PORT_CMD, 1, std::bind(&Controller::vertical_thruster_3_callback, this, std::placeholders::_1));
-    vertical_thruster_4_cmd_sub = rcl_node->create_subscription<std_msgs::msg::Float32>(lolo_msgs::msg::Topics::VERTICAL_THRUSTER_BACK_STRB_CMD, 1, std::bind(&Controller::vertical_thruster_4_callback, this, std::placeholders::_1));
+    vertical_thruster_4_cmd_sub = rcl_node->create_subscription<std_msgs::msg::Float32>(lolo_msgs::msg::Topics::VERTICAL_THRUSTER_BACK_STBD_CMD, 1, std::bind(&Controller::vertical_thruster_4_callback, this, std::placeholders::_1));
     
     menu_sub = rcl_node->create_subscription<std_msgs::msg::String>("debug/menu_in", 1, std::bind(&Controller::menu_callback, this, std::placeholders::_1));
     
@@ -90,9 +90,9 @@ void Controller::elevon_port_callback(const std_msgs::msg::Float32::SharedPtr _m
     lolo->send_package();
 }
 
-void Controller::elevon_strb_callback(const std_msgs::msg::Float32::SharedPtr _msg) {
+void Controller::elevon_stbd_callback(const std_msgs::msg::Float32::SharedPtr _msg) {
     float angle = _msg->data;
-    lolo->new_package(SC_SET_ELEVON_STRB);
+    lolo->new_package(SC_SET_ELEVON_STBD);
     lolo->add_float(angle);
     lolo->send_package();
 }
@@ -103,8 +103,8 @@ void Controller::thruster_port_callback(const std_msgs::msg::Float32::SharedPtr 
     lolo->send_package();
 }
 
-void Controller::thruster_strb_callback(const std_msgs::msg::Float32::SharedPtr _msg) {
-    lolo->new_package(SC_SET_THRUSTER_STRB);
+void Controller::thruster_stbd_callback(const std_msgs::msg::Float32::SharedPtr _msg) {
+    lolo->new_package(SC_SET_THRUSTER_STBD);
     lolo->add_float(_msg->data);
     lolo->send_package();
 }
